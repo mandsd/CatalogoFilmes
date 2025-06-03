@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { buscarTodos, remover } from "../services/ContatoService";
+import { filmeService } from "../services/filmeService";
 import Listagem from "./Listagem.jsx";
 import { RotaContext } from "../contexts/RotaContext.jsx";
 
@@ -8,13 +8,13 @@ function Listar() {
   const [erro, setErro] = useState("");
   const { setRota } = useContext(RotaContext);
 
-  const carregar = async () => {
-    const resposta = await buscarTodos();
-    if (resposta.sucesso) {
-      setFilmes(resposta.dados);
+  const carregar = () => {
+    try {
+      const filmesCarregados = filmeService.getFilmes();
+      setFilmes(filmesCarregados);
       setErro("");
-    } else {
-      setErro(resposta.mensagem);
+    } catch (error) {
+      setErro("Erro ao carregar filmes");
     }
   };
 
@@ -22,12 +22,12 @@ function Listar() {
     setRota(`/editar/${id}`);
   };
 
-  const handleRemover = async (id) => {
-    const resposta = await remover(id);
-    if (resposta.sucesso) {
-      carregar();  
-    } else {
-      setErro(resposta.mensagem);
+  const handleRemover = (id) => {
+    try {
+      filmeService.excluirFilme(id);
+      carregar();
+    } catch (error) {
+      setErro("Erro ao remover filme");
     }
   };
 
@@ -39,7 +39,7 @@ function Listar() {
     <>
       <h2>Meus Filmes</h2>
       <Listagem itens={filmes} onModificar={handleModificar} onRemover={handleRemover} />
-      {erro && <p>{erro}</p>}
+      {erro && <p className="error-message">{erro}</p>}
     </>
   );
 }

@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { adicionar } from "../services/ContatoService";
+import { filmeService } from "../services/filmeService";
 import { RotaContext } from "../contexts/RotaContext.jsx";
 import Formulario from "./Formulario.jsx";
 
@@ -7,13 +7,13 @@ function Novo() {
   const [erro, setErro] = useState("");
   const { setRota } = useContext(RotaContext);
 
-  const handleSalvar = async (filmes) => {
-    const resposta = await adicionar(filmes);
-    if (resposta.sucesso) {
+  const handleSalvar = (filme) => {
+    try {
+      filmeService.adicionarFilme(filme);
       setErro("");
       setRota("/listar");
-    } else {
-      setErro(resposta.mensagem);
+    } catch (error) {
+      setErro("Erro ao adicionar filme");
     }
   };
 
@@ -21,7 +21,7 @@ function Novo() {
     <>
       <h2>Novo Filme</h2>
       <Formulario onSubmit={handleSalvar} />
-      {erro && <p>{erro}</p>}
+      {erro && <p className="error-message">{erro}</p>}
     </>
   );
 }

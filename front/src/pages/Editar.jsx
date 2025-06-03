@@ -1,44 +1,47 @@
 import { useContext, useEffect, useState } from "react";
-import { buscarPorId, modificar } from "../services/ContatoService";
+import { filmeService } from "../services/filmeService";
 import { RotaContext } from "../contexts/RotaContext.jsx";
 import Formulario from "./Formulario.jsx";
 
 function Editar() {
   const { rota, setRota } = useContext(RotaContext);
-  const [contato, setContato] = useState({});
+  const [filme, setFilme] = useState({});
   const [erro, setErro] = useState("");
-  const id = rota.replace("/editar/", "");
+  const id = parseInt(rota.replace("/editar/", ""));
 
   useEffect(() => {
     carregar();
   }, [id]);
 
-  const carregar = async () => {
-    const resposta = await buscarPorId(id);
-    if (resposta.sucesso) {
-      setContato(resposta.dados);
-      setErro("");
-    } else {
-      setErro(resposta.mensagem);
+  const carregar = () => {
+    try {
+      const filmeCarregado = filmeService.getFilmePorId(id);
+      if (filmeCarregado) {
+        setFilme(filmeCarregado);
+        setErro("");
+      } else {
+        setErro("Filme não encontrado");
+      }
+    } catch (error) {
+      setErro("Erro ao carregar filme");
     }
   };
 
-  const handleSalvar = async (contato) => {
-    const resposta = await modificar(id, contato);
-    if (resposta.sucesso) {
+  const handleSalvar = (filmeAtualizado) => {
+    try {
+      filmeService.atualizarFilme(id, filmeAtualizado);
       setErro("");
       setRota("/listar");
-    } else {
-      setErro(resposta.mensagem);
+    } catch (error) {
+      setErro("Erro ao atualizar filme");
     }
-    carregar();
   };
 
   return (
     <>
-      <h2>Editar</h2>
-      <Formulario onSubmit={handleSalvar} valores={contato} />
-      {erro && <p>{erro}</p>}
+      <h2>Editar Filme</h2>
+      <Formulario onSubmit={handleSalvar} valores={filme} />
+      {erro && <p className="error-message">{erro}</p>}
     </>
   );
 }
