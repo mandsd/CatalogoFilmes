@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { userService } from '../services/userService';
+import ForgotPassword from './ForgotPassword';
 import './Login.css';
 
 const Login = ({ onLogin }) => {
   const [isLogin, setIsLogin] = useState(true);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -97,6 +99,25 @@ const Login = ({ onLogin }) => {
     setAuthError('');
   };
 
+  const handleForgotPassword = () => {
+    setShowForgotPassword(true);
+  };
+
+  const handleBackToLogin = () => {
+    setShowForgotPassword(false);
+    setFormData({
+      email: '',
+      password: '',
+      confirmPassword: ''
+    });
+    setErrors({});
+    setAuthError('');
+  };
+
+  if (showForgotPassword) {
+    return <ForgotPassword onBack={handleBackToLogin} />;
+  }
+
   return (
     <div className="login-container">
       <form onSubmit={handleSubmit} className="login-form">
@@ -150,6 +171,11 @@ const Login = ({ onLogin }) => {
         </button>
 
         <div className="toggle-mode">
+          {isLogin && (
+            <button type="button" onClick={handleForgotPassword} className="forgot-password-link">
+              Esqueceu a senha?
+            </button>
+          )}
           <p>
             {isLogin ? 'Não tem uma conta?' : 'Já tem uma conta?'}
             <button type="button" onClick={toggleMode} className="toggle-button">

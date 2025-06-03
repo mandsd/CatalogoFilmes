@@ -57,5 +57,20 @@ export const userService = {
   // Check if user is authenticated
   isAuthenticated: () => {
     return !!userService.getCurrentUser();
+  },
+
+  // Reset password
+  resetPassword: (email, newPassword) => {
+    const users = userService.getUsers();
+    const userIndex = users.findIndex(u => u.email === email);
+    
+    if (userIndex === -1) {
+      throw new Error('Email não encontrado');
+    }
+
+    // Update user's password
+    users[userIndex].password = newPassword;
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    return users[userIndex];
   }
 }; 
