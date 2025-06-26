@@ -2,21 +2,20 @@
 
 Um aplicativo web moderno para gerenciar e visualizar um catálogo de filmes, desenvolvido com React e Vite.
 
-## ✨ Funcionalidades
+## Funcionalidades
 
 - Visualização de lista de filmes
 - Adição de novos filmes ao catálogo
-- Interface moderna e responsiva
 - Navegação intuitiva
 
-## 🚀 Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 - React
 - Vite
-- CSS Moderno
-- Git para controle de versão
+- CSS 
+- Git 
 
-## 🛠️ Instalação
+##  Instalação
 
 1. Clone o repositório:
 ```bash
@@ -41,7 +40,7 @@ npm run dev
 
 O aplicativo estará disponível em `http://localhost:5173`
 
-## 👩‍💻 Criadores:
+## Criadores:
 
 . Amanda Ferreira Dahm
 . Alessandro Ribeiro Moreira
